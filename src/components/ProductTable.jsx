@@ -5,14 +5,24 @@ import ProductRow from './ProductRow';
 
 export default class ProductTable extends Component {
   render() {
+    const { filterText, inStockOnly, products } = this.props;
     const rows = [];
     let lastCategory = null;
-    const { products } = this.props;
 
     products.forEach((product) => {
+      //  *string.indexOf('') | string.indexOf() defaults to 0
+      if (product.name.toLowerCase().indexOf(filterText.toLowerCase()) === -1) {
+        return;
+      }
+
+      if (inStockOnly && !product.stocked) {
+        return;
+      }
+
       if (product.category !== lastCategory) {
         rows.push(<ProductCategoryRow category={product.category} key={product.category} />);
       }
+
       rows.push(<ProductRow product={product} key={product.name} />);
       lastCategory = product.category;
     });
@@ -32,5 +42,7 @@ export default class ProductTable extends Component {
 }
 
 ProductTable.propTypes = {
-  products: PropTypes.array.isRequired,
+  filterText: PropTypes.string.isRequired,
+  inStockOnly: PropTypes.bool.isRequired,
+  products: PropTypes.arrayOf(PropTypes.object).isRequired,
 };

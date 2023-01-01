@@ -10,6 +10,17 @@ export default class FilterProductTable extends Component {
       filterText: '',
       inStockOnly: false,
     };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    event.preventDefault();
+    const name = event.target.name;
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+
+    this.setState({
+      [name]: value,
+    });
   }
 
   render() {
@@ -18,7 +29,7 @@ export default class FilterProductTable extends Component {
 
     return (
       <div className="bg-white p-8 shadow-sm rounded">
-        <SearchBar filterText={filterText} inStockOnly={inStockOnly} />
+        <SearchBar filterText={filterText} inStockOnly={inStockOnly} handleChange={this.handleChange} />
         <ProductTable products={products} filterText={filterText} inStockOnly={inStockOnly} />
       </div>
     );
